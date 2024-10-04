@@ -1,22 +1,55 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 
 export default function App() {
+  const onPressHandler = () => {
+    Alert.alert('Button Pressed!');
+  };
   return (
-    <Text style={styles.pnet_title}>Pnet By DrPanayioths</Text>
+    <View style={styles.container}>
+      <Text style={styles.title}>Pnet By DrPanayioths</Text>
+
+      <TouchableOpacity style={styles.graybox} onPress={onPressHandler}>
+        <Text style={styles.boxes}>Your IP Address:</Text>
+        <Text style={styles.values}>192.168.1.0</Text>
+      </TouchableOpacity>
+
+
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    position: "absolute",
+    flex: 1,
+    alignItems: "center",
+    backgroundColor: "black",
   },
-  pnet_title: {
-    color: "black",
+  title: {
+    color: "white",
     fontSize: 30,
     fontWeight: "bold",
-    top: 30,
-    left: 60,
+    marginTop: 50,
+  },
+  graybox: {
+    width: 250,
+    height: 100,
+    backgroundColor: 'gray',
+    marginRight: 150,
+    marginTop: 20,
+    justifyContent: 'center', // Center text vertically in the box
+    alignItems: 'center', // Center text horizontally in the box
+    borderRadius: 30,
+  },
+  boxes: {
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: 16,
+    marginBottom: 30,
+  },
+  values: {
+    color: 'white',
+    fontSize: 25,
+  },
 
-  }
 });
