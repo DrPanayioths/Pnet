@@ -1,18 +1,44 @@
-import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Alert } from 'react-native';
+import React, { useEffect , useState } from 'react';
+import { View, Text , StyleSheet , Alert, Pressable } from 'react-native';
+
 
 export default function App() {
+  // Button Press Actions
   const onPressHandler = () => {
     Alert.alert('Button Pressed!');
   };
+
+  // Fetch And Show Of IP Address 
+  const [ip, setIp] = useState('Fetching IP...');
+  const fetchIp = async () => {
+    try {
+      const response = await fetch('https://api.ipify.org?format=json');
+      const data = await response.json();
+      setIp(data.ip);
+    } catch (error) {
+      console.log("Error Code (Sent It To Me DrPanayioths On Discord): " + error);
+    }
+  };
+  useEffect(() => {
+    fetchIp();
+  });
+
+
+
+
+
+
+
+
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Pnet By DrPanayioths</Text>
 
-      <TouchableOpacity style={styles.graybox} onPress={onPressHandler}>
+      <Pressable style={styles.graybox} onPress={onPressHandler}>
         <Text style={styles.boxes}>Your IP Address:</Text>
-        <Text style={styles.values}>192.168.1.0</Text>
-      </TouchableOpacity>
+        <Text style={styles.values}>{ip}</Text>
+      </Pressable>
 
 
     </View>
