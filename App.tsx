@@ -1,11 +1,13 @@
 import React, { useEffect , useState } from 'react';
-import { View, Text , StyleSheet , Alert, Pressable } from 'react-native';
+import { View, Text , StyleSheet , Alert, Pressable} from 'react-native';
+import * as Clipboard from 'expo-clipboard';
 
 
 export default function App() {
   // Button Press Actions
-  const onPressHandler = () => {
-    Alert.alert('Button Pressed!');
+  const onPressHandler = async () => {
+    await Clipboard.setStringAsync(ip);
+    Alert.alert("Clipboard: Copied IP Address");
   };
 
   // Fetch And Show Of IP Address 
