@@ -17,11 +17,21 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
-      }
+        "VersionCode": 1,
+        "backgroundColor": "#ffffff",
+        "permissions": [
+          "INTERNET"
+        ]
+      },
+      "package": "com.drpanayioths.Pnet"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "ef664db7-efc5-482c-83c9-c95d419aeaa1"
+      }
     }
   }
 }

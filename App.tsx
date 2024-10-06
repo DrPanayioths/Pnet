@@ -1,14 +1,21 @@
 import React, { useEffect , useState } from 'react';
 import { View, Text , StyleSheet , Alert, Pressable} from 'react-native';
 import * as Clipboard from 'expo-clipboard';
-
+import * as Device from 'expo-device';
 
 export default function App() {
   // Button Press Actions
   const onPressHandler = async () => {
-    await Clipboard.setStringAsync(ip);
-    Alert.alert("Clipboard: Copied IP Address");
-  };
+    if (ip !== null) {
+      await Clipboard.setStringAsync(ip);
+  }};
+  const onPressHandler_os = async () => {
+    if (Device.osName !== null) {
+      await Clipboard.setStringAsync(Device.osName);
+  }};
+
+
+
 
   // Fetch And Show Of IP Address 
   const [ip, setIp] = useState('Fetching IP...');
@@ -32,52 +39,69 @@ export default function App() {
 
 
 
-
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Pnet By DrPanayioths</Text>
-
-      <Pressable style={styles.graybox} onPress={onPressHandler}>
-        <Text style={styles.boxes}>Your IP Address:</Text>
-        <Text style={styles.values}>{ip}</Text>
-      </Pressable>
-
-
+  
+      {/* Wrap graybox1 and graybox2 in a flex row container */}
+      <View style={styles.rowContainer}>
+        <Pressable style={styles.graybox} onPress={onPressHandler}>
+          <Text style={styles.boxes}>Your IP Address:</Text>
+          <Text style={styles.values}>{ip}</Text>
+        </Pressable>
+  
+        <Pressable style={styles.graybox} onPress={onPressHandler_os}>
+          <Text style={styles.boxes}>OS Name:</Text>
+          <Text style={styles.values_os}>{Device.osName}</Text>
+        </Pressable>
+      </View>
     </View>
-  );
-}
+  );}
+  
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    backgroundColor: "black",
-  },
-  title: {
-    color: "white",
-    fontSize: 30,
-    fontWeight: "bold",
-    marginTop: 50,
-  },
-  graybox: {
-    width: 250,
-    height: 100,
-    backgroundColor: 'gray',
-    marginRight: 150,
-    marginTop: 20,
-    justifyContent: 'center', // Center text vertically in the box
-    alignItems: 'center', // Center text horizontally in the box
-    borderRadius: 30,
-  },
-  boxes: {
-    color: 'white',
-    fontWeight: 'bold',
-    fontSize: 16,
-    marginBottom: 30,
-  },
-  values: {
-    color: 'white',
-    fontSize: 25,
-  },
-
-});
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      justifyContent: 'center',
+      backgroundColor: "black",
+    },
+    title: {
+      color: "white",
+      fontSize: 30,
+      fontWeight: "bold",
+      textAlign: 'center',
+      marginBottom: 20,
+    },
+    rowContainer: {
+      flexDirection: 'row',  // Box Side By Side
+      justifyContent: 'space-between',  // Space Between
+      alignItems: 'center',  // Centers vertically
+      width: '100%',  // Adjust this to control width of the container
+      alignSelf: 'center',  // Centers the row container on the screen
+      marginTop: 20,
+    },
+    graybox: {
+      width: 200,
+      height: 100,
+      backgroundColor: 'gray',
+      justifyContent: 'center',
+      alignItems: 'center',  // Center content horizontally
+      borderRadius: 30,
+    },
+    boxes: {
+      color: 'white',
+      fontWeight: 'bold',
+      fontSize: 16,
+      marginBottom: 10,
+    },
+    values: {
+      color: 'white',
+      fontSize: 20,
+      
+    },
+    values_os: {
+      color: 'white',
+      fontSize: 13,
+    },
+  });
+  
