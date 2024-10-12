@@ -1,9 +1,11 @@
 import React, { useEffect , useState } from 'react';
-import { View, Text , StyleSheet , Alert, Pressable} from 'react-native';
+import { View, Text , StyleSheet , Alert, Pressable, Dimensions } from 'react-native';
 import * as Clipboard from 'expo-clipboard';
 import * as Device from 'expo-device';
 
 export default function App() {
+
+  
   // Button Press Actions
   const onPressHandler = async () => {
     if (ip !== null) {
@@ -28,22 +30,28 @@ export default function App() {
       console.log("Error Code (Sent It To Me DrPanayioths On Discord): " + error);
     }
   };
+
+  
   useEffect(() => {
     fetchIp();
   });
 
+  
 
 
 
+  // Dimensions Get
 
-
+  const { width, height } = Dimensions.get('window');
+  const Width_final = Math.floor(width);
+  const intHeight_final = Math.floor(height);
+  
 
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Pnet By DrPanayioths</Text>
   
-      {/* Wrap graybox1 and graybox2 in a flex row container */}
       <View style={styles.rowContainer}>
         <Pressable style={styles.graybox} onPress={onPressHandler}>
           <Text style={styles.boxes}>Your IP Address:</Text>
@@ -54,9 +62,17 @@ export default function App() {
           <Text style={styles.boxes}>OS Name:</Text>
           <Text style={styles.values_os}>{Device.osName}</Text>
         </Pressable>
-      </View>
+        </View>
+
+        <View style={{ marginTop: 10}}>
+          <Pressable style={styles.graybox}>
+            <Text style={styles.boxes}>Screen Dimensions:</Text>
+            <Text style={styles.values}>{intHeight_final} X {Width_final}</Text>
+          </Pressable>
+        </View>
+  
     </View>
-  );}
+  )};
   
 
   const styles = StyleSheet.create({
