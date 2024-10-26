@@ -1,7 +1,8 @@
 import React, { useEffect , useState } from 'react';
-import { View, Text , StyleSheet , Alert, Pressable, Dimensions } from 'react-native';
+import { View, Text , StyleSheet , Pressable, Dimensions } from 'react-native';
 import * as Clipboard from 'expo-clipboard';
 import * as Device from 'expo-device';
+import * as Network from 'expo-network';
 
 export default function App() {
 
@@ -15,6 +16,12 @@ export default function App() {
     if (Device.osName !== null) {
       await Clipboard.setStringAsync(Device.osName);
   }};
+
+  const onPressHandler_network = async () => {
+    if (networkInfo !== null) {
+      await Clipboard.setStringAsync(networkInfo);
+    }
+  };
 
 
 
@@ -30,11 +37,28 @@ export default function App() {
       console.log("Error Code (Sent It To Me DrPanayioths On Discord): " + error);
     }
   };
-
-  
   useEffect(() => {
     fetchIp();
   });
+
+
+  // Network Information
+  const [networkInfo, setNetworkInfo] = useState('Fetching network info...');
+  const fetchNetworkInfo = async () => {
+    try {
+      const netInfo = await Network.getNetworkStateAsync();
+      if (netInfo.isConnected) {
+        setNetworkInfo(`${netInfo.type} - ${netInfo.isInternetReachable ? 'Internet reachable' : 'No internet'}`);
+      } else {
+        setNetworkInfo('Not connected');
+      }
+    } catch (error) {
+      console.log("Error Code (Sent It To Me DrPanayioths On Discord): " + error);
+    }
+  };
+  useEffect(() => {
+    fetchNetworkInfo();
+  }, []);
 
   
 
@@ -42,9 +66,9 @@ export default function App() {
 
   // Dimensions Get
 
-  const { width, height } = Dimensions.get('window');
-  const Width_final = Math.floor(width);
+  const { height, width } = Dimensions.get('window');
   const intHeight_final = Math.floor(height);
+  const Width_final = Math.floor(width);
   
 
 
@@ -60,16 +84,25 @@ export default function App() {
   
         <Pressable style={styles.graybox} onPress={onPressHandler_os}>
           <Text style={styles.boxes}>OS Name:</Text>
-          <Text style={styles.values_os}>{Device.osName}</Text>
+          <Text style={[styles.values, { fontSize: 13 }]}>{Device.osName}</Text>
         </Pressable>
-        </View>
+      </View>
 
-        <View style={{ marginTop: 10}}>
-          <Pressable style={styles.graybox}>
-            <Text style={styles.boxes}>Screen Dimensions:</Text>
-            <Text style={styles.values}>{intHeight_final} X {Width_final}</Text>
-          </Pressable>
-        </View>
+      <View style={{ marginTop: 10, flexDirection: 'row', justifyContent: 'space-between' }}>
+        <Pressable style={styles.graybox}>
+          <Text style={styles.boxes}>Screen Dimensions:</Text>
+          <Text style={[styles.values]}>{intHeight_final} X {Width_final}</Text>
+        </Pressable>
+
+        <Pressable style={styles.graybox} onPress={onPressHandler_network}>
+          <Text style={styles.boxes}>Network Info:</Text>
+          <Text style={[styles.values, { fontSize: 15 }, { textAlign: 'center' }]}>{networkInfo}</Text>
+        </Pressable>
+      </View>
+      
+
+
+
   
     </View>
   )};
@@ -101,7 +134,7 @@ export default function App() {
       height: 100,
       backgroundColor: 'gray',
       justifyContent: 'center',
-      alignItems: 'center',  // Center content horizontally
+      alignItems: 'center',
       borderRadius: 30,
     },
     boxes: {
@@ -114,10 +147,6 @@ export default function App() {
       color: 'white',
       fontSize: 20,
       
-    },
-    values_os: {
-      color: 'white',
-      fontSize: 13,
     },
   });
   
