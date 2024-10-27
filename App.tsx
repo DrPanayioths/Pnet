@@ -1,5 +1,5 @@
 import React, { useEffect , useState } from 'react';
-import { View, Text , StyleSheet , Pressable, Dimensions } from 'react-native';
+import { View, Text , StyleSheet , Pressable, Dimensions} from 'react-native';
 import * as Clipboard from 'expo-clipboard';
 import * as Device from 'expo-device';
 import * as Network from 'expo-network';
@@ -16,6 +16,11 @@ export default function App() {
     if (Device.osName !== null) {
       await Clipboard.setStringAsync(Device.osName);
   }};
+  const onPressHandler_Screen = async () => {
+    if (Height_final !== null && Width_final !== null) {
+      await Clipboard.setStringAsync(Height_final + ' X ' + Width_final);
+    }
+  };
 
   const onPressHandler_network = async () => {
     if (networkInfo !== null) {
@@ -65,11 +70,40 @@ export default function App() {
 
 
   // Dimensions Get
-
   const { height, width } = Dimensions.get('window');
-  const intHeight_final = Math.floor(height);
+  const Height_final = Math.floor(height);
   const Width_final = Math.floor(width);
-  
+
+
+  // Connection Quality
+  const [connectionQuality, setConnectionQuality] = useState('Checking connection...');
+  const checkConnectionQuality = async () => {
+      const netInfo = await Network.getNetworkStateAsync();
+      if (netInfo.isConnected) {
+        if (netInfo.isInternetReachable) {
+          const startTime = Date.now();
+          await fetch('https://www.google.com');
+          const endTime = Date.now();
+          const latency = endTime - startTime;
+
+          if (latency < 100) {
+            setConnectionQuality('Quality: Excellent | Latency: ' + latency);
+          } else if (latency < 300) {
+            setConnectionQuality('Quality: Good | Latency: ' + latency);
+          } else if (latency < 500) {
+            setConnectionQuality('Quality: Fair | Latency: ' + latency);
+          } else {
+            setConnectionQuality('Quality: Poor | Latency: ' + latency);
+          }
+
+         
+        } else {
+          setConnectionQuality('Not Connected or No Internet');
+        }
+      }
+  };
+
+
 
 
   return (
@@ -89,9 +123,9 @@ export default function App() {
       </View>
 
       <View style={{ marginTop: 10, flexDirection: 'row', justifyContent: 'space-between' }}>
-        <Pressable style={styles.graybox}>
+        <Pressable style={styles.graybox} onPress={onPressHandler_Screen}>
           <Text style={styles.boxes}>Screen Dimensions:</Text>
-          <Text style={[styles.values]}>{intHeight_final} X {Width_final}</Text>
+          <Text style={[styles.values]}>{Height_final} X {Width_final}</Text>
         </Pressable>
 
         <Pressable style={styles.graybox} onPress={onPressHandler_network}>
@@ -99,9 +133,13 @@ export default function App() {
           <Text style={[styles.values, { fontSize: 15 }, { textAlign: 'center' }]}>{networkInfo}</Text>
         </Pressable>
       </View>
-      
 
-
+      <View style={{ marginTop: 10 }}>
+        <Pressable style={styles.graybox} onPress={checkConnectionQuality}>
+          <Text style={styles.boxes}>Connection Quality:</Text>
+          <Text style={[styles.values, { fontSize: 15 }]}>{connectionQuality}</Text>
+        </Pressable>
+      </View>
 
   
     </View>
